@@ -1,1 +1,85 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+
+using namespace std;
+
+int solve_cases(int n, vector<int>& A) {
+    for (int lheight = 0; lheight <= 100; lheight++) {
+        vector<bool> visited(n, false);
+        visited[0] = true;
+        
+        bool changed = true;
+        while (changed) {
+            changed = false;
+            
+            for (int i = 0; i < n; i++) {
+                if (!visited[i]) continue;
+                
+                for (int j = 0; j < n; j++) {
+                    if (visited[j]) continue;
+                    
+                    if (abs(i - j) == 1) {
+                        int height_gap = abs(A[i] - A[j]);
+                        if (height_gap <= lheight) {
+                            visited[j] = true;
+                            changed = true;
+                        }
+                    }
+                }
+            }
+        }
+        
+        bool all_visited = true;
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                all_visited = false;
+                break;
+            }
+        }
+        
+        if (all_visited) {
+            return lheight;
+        }
+    }
+    
+    return 100;
+}
+
+int main() {
+    ifstream infile("input.txt");
+    ofstream outfile("output.txt");
+    
+    if (!infile) {
+        cout << "ERROR: Cannot open input.txt" << endl;
+        return 1;
+    }
+    
+    int t;
+    infile >> t;
+    
+    for (int tc = 1; tc <= t; tc++) {
+        int n;
+        infile >> n;
+        
+        vector<int> A(n);
+        for (int i = 0; i < n; i++) {
+            infile >> A[i];
+        }
+        
+        int result = solve_cases(n, A);
+        
+        outfile << "Case #" << tc << ": " << result << "\n";
+        cout << "Case #" << tc << ": " << result << endl;
+    }
+    
+    infile.close();
+    outfile.close();
+    
+    cout << "\nSolution completed! Check output.txt" << endl;
+    
+    return 0;
+}
 
